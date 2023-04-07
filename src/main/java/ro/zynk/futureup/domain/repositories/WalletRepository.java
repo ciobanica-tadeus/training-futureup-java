@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface WalletRepository extends PagingAndSortingRepository<Wallet, Long> {
+    ///aici @Query
     List<Wallet> findAll();
 
 }

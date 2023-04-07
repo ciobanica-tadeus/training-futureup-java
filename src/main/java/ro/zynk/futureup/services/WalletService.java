@@ -101,8 +101,8 @@ public class WalletService {
 
         CoinAmount desiredCoinAmount = getOrCreateCoinAmount(coin, existingCoinAmount.getWallet());
 
-        existingCoinAmount.setAmount((valueOfHeldCoinAmountInUsd - valueOfBoughtCoinsInUsd)/existingCoinAmount.getCoin().getValue());
-        desiredCoinAmount.setAmount(desiredCoinAmount.getAmount() + valueOfBoughtCoinsInUsd/desiredCoinAmount.getCoin().getValue());
+        existingCoinAmount.setAmount((valueOfHeldCoinAmountInUsd - valueOfBoughtCoinsInUsd) / existingCoinAmount.getCoin().getValue());
+        desiredCoinAmount.setAmount(desiredCoinAmount.getAmount() + valueOfBoughtCoinsInUsd / desiredCoinAmount.getCoin().getValue());
 
         coinAmountRepository.save(existingCoinAmount);
         coinAmountRepository.save(desiredCoinAmount);
@@ -135,5 +135,21 @@ public class WalletService {
             coinTransactionResponses.add(new CoinTransactionResponse(coinAmount));
         }
         return new ListCoinTransactionResponse(coinTransactionResponses);
+    }
+
+
+    public TotalValueOfWalletResponse getTotalValueOfCoinsFromWallet(Long walletId) {
+        Optional<Wallet> walletOptional = walletRepository.findById(walletId);
+        if (walletOptional.isEmpty()) {
+            throw new NotFoundException("Wallet not found");
+        }
+        List<CoinAmount> coinAmounts = coinAmountRepository.findAllByWallet(walletOptional.get());
+
+        float totalValue = 0f;
+        for (CoinAmount coinAmount : coinAmounts) {
+            Double valueOfCoin = coinAmount.getCoin().getValue();
+            totalValue += coinAmount.getAmount() * valueOfCoin;
+        }
+        return new TotalValueOfWalletResponse(totalValue);
     }
 }

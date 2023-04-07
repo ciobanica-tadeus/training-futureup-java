@@ -22,7 +22,7 @@ public class DbInitializer {
         this.walletRepository = walletRepository;
     }
 
-    @PostConstruct
+    //@PostConstruct
     public void initializer() {
         Wallet wallet = new Wallet("Wallet Andrei");
         walletRepository.save(wallet);
