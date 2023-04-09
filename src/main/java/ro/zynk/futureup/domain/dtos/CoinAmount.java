@@ -17,6 +17,7 @@ public class CoinAmount extends BaseEntity {
     private Double amount;
 
     public CoinAmount() {
+
     }
 
     public CoinAmount(Wallet wallet, Coin coin, Double amount) {
